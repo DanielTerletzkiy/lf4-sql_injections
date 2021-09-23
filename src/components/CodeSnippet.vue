@@ -5,7 +5,7 @@
     </v-card-subtitle>
     <v-divider class="mx-2"></v-divider>
     <div class="pa-2" style="height: 84%">
-      <v-card style="height: 100%; overflow: auto; font-family: monospace;">
+      <div style="height: 100%; overflow: auto; font-family: monospace;">
         <v-card-text>
           <pre v-highlightjs="`SELECT *
   FROM users
@@ -13,7 +13,7 @@
   AND pass  = '${password}' LIMIT 1
 `"><code class="sql"></code></pre>
         </v-card-text>
-      </v-card>
+      </div>
     </div>
   </v-card>
 </template>

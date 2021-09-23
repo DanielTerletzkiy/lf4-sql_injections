@@ -1,7 +1,7 @@
 <template>
   <v-app style="background: #1F2128">
     <v-navigation-drawer app permanent width="360">
-      <tutorial-card :guide="guide" :currentGuideItem="currentGuideItem"/>
+      <tutorial-card :guide="guide" :currentGuideItem="currentGuideItem" />
     </v-navigation-drawer>
     <v-main>
       <v-container
@@ -19,8 +19,23 @@
           </v-card-text>
           <v-card-text>
             <v-form @submit.prevent="attemptLogin" id="login-form">
-              <v-text-field required v-model="email" type="email" outlined rounded label="E-Mail" />
-              <v-text-field required v-model="password" type="password" outlined rounded label="Password" :hint="password" />
+              <v-text-field
+                required
+                v-model="email"
+                type="email"
+                outlined
+                rounded
+                label="E-Mail"
+              />
+              <v-text-field
+                required
+                v-model="password"
+                type="password"
+                outlined
+                rounded
+                label="Password"
+                :hint="password"
+              />
               <v-card-actions style="display: flex">
                 <v-hover v-slot="{ hover }" v-if="false">
                   <v-btn
@@ -40,7 +55,16 @@
                     >
                   </v-btn>
                 </v-hover>
-                <v-btn style="flex: 1" rounded depressed x-large color="accent" type="submit" form="login-form">
+                <v-btn
+                  style="flex: 1"
+                  rounded
+                  depressed
+                  x-large
+                  color="accent"
+                  type="submit"
+                  form="login-form"
+                  :loading="loading"
+                >
                   <v-icon>mdi-wallet-outline</v-icon>Sign In
                 </v-btn>
               </v-card-actions>
@@ -51,8 +75,8 @@
       <v-container
         style="display: flex; justify-content: space-around; align-items: center; height:50%"
       >
-        <log-window/>
-        <code-snippet :email="email" :password="password"/>
+        <log-window ref="logWindow" />
+        <code-snippet :email="email" :password="password" />
       </v-container>
     </v-main>
   </v-app>
@@ -65,36 +89,102 @@ import TutorialCard from './components/TutorialCard.vue';
 export default {
   name: 'App',
 
-  components: {CodeSnippet, LogWindow, TutorialCard},
+  components: { CodeSnippet, LogWindow, TutorialCard },
 
-  data: () => ({
-    email: '',
-    password: '',
-    
-    currentGuideItem: 0,
-    guide: [
-      {
-        title: 'Einführung',
-        instructions: 'Tue dies und das um das zu machen, damit es dies und das tun kann',
-      },
-      {
-        title: 'Einführung',
-        instructions: 'Tue dies und das um das zu machen, damit es dies und das tun kann',
-      },
-    ],
-  }),
+  data() {
+    return {
+      email: '',
+      password: '',
+      loading: false,
+
+      currentGuideItem: 0,
+      guide: [
+        {
+          title: 'Einführung',
+          instructions: `
+          <span>Geben Sie ein: 
+            <div class="pt-1">
+              E-Mail: <span class="primary--text text--lighten-2 font-weight-bold">test@email.com</span>
+              <br/>
+              Password: <span class="primary--text text--lighten-2 font-weight-bold">securePassword</span>
+            </div>
+            <div class="pt-1">
+              Und schauen sie in die <strong>Logs</strong>
+            </div>
+          </span>`,
+          function: async () => {
+            await this.$refs.logWindow.addLine('Logging in...', 'info', 100);
+            await this.$refs.logWindow.addLine(
+              'Strange... login infos don´t match',
+              'warning',
+              3000
+            );
+          },
+        },
+        {
+          title: "Mit ' probieren",
+          instructions: `
+          <span>Versuche es jetzt mit einen ' nach dem Passwort: 
+            <div class="pt-1">
+              E-Mail: <span class="primary--text text--lighten-2 font-weight-bold">test@email.com</span>
+              <br/>
+              Password: <span class="primary--text text--lighten-2 font-weight-bold">securePassword'</span>
+            </div>
+            <div class="pt-1">
+              Und schauen sie in die <strong>Logs</strong>
+            </div>
+          </span>`,
+          function: async () => {
+            await this.$refs.logWindow.addLine('Logging in...', 'info', 100);
+            await this.$refs.logWindow.addLine(
+              `An error occurred: PG::SyntaxError: ERROR: unterminated quoted string at or near "'securePassword'' limit 1" LINE 1: ...ers where email = 'user@email.com' and pass = 'securePassword'... ^ : select * from users where email = 'user@email.com' and pass = 'securePassword'' limit 1.Unable to login this user due to unexpected error.`,
+              'error',
+              3000
+            );
+          },
+        },
+        {
+          title: 'Der Server ist gecrasht',
+          instructions: `
+          <div>Was könnte das bedeuten?</div>
+          <div>Die <strong>Logs</strong> zeigen, dass der <strong>'</strong> charakter etwas durcheinander gebracht hat...</div>`,
+          function: async () => {},
+        },
+      ],
+    };
+  },
 
   methods: {
-    attemptLogin: async function (e){
-      console.log(e)
-      this.currentGuideItem ++;
-    }
-  }
+    attemptLogin: async function(e) {
+      if (!this.loading) {
+        this.loading = true;
+        console.log(e);
+        await this.guide[this.currentGuideItem].function();
+        this.currentGuideItem++;
+        this.loading = false;
+      }
+    },
+  },
+
+  mounted: async function() {
+    await this.$refs.logWindow.addLine('[Starting Server...]', 'info', 300);
+    await this.$refs.logWindow.addLine('[Server Started]', 'info', 300);
+    /*await this.$refs.logWindow.addLine(
+      '[Cant continue... There is an unexpected sussy baka on line: 234]',
+      'error',
+      2000
+    );*/
+    await this.$refs.logWindow.addLine('', 'transparent', 0);
+  },
 };
 </script>
 
 <style>
 html {
   overflow-y: hidden !important;
+}
+.theme--dark.v-navigation-drawer:not(.v-navigation-drawer--floating)
+  .v-navigation-drawer__border {
+  background-color: transparent !important;
 }
 </style>
