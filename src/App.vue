@@ -161,7 +161,7 @@ export default {
       password: '',
       loading: false,
 
-      currentGuideItem: 6,
+      currentGuideItem: 0,
       guide: [
         {
           title: 'Einführung',
