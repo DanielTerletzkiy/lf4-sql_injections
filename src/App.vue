@@ -17,7 +17,7 @@
               <v-icon style="color: inherit">mdi-currency-usd</v-icon> ;)
             </v-card-subtitle>
           </v-card-text>
-          <v-card-text>
+          <v-card-text v-if="!atEnd">
             <v-form @submit.prevent="attemptLogin" id="login-form">
               <v-text-field
                 required
@@ -70,13 +70,77 @@
               </v-card-actions>
             </v-form>
           </v-card-text>
+          <v-card-text v-else>
+            //addProfile
+            <v-row>
+              <v-col>
+                <v-card-title class="pa-0 primary--text text--lighten-2">
+                  Account
+                </v-card-title>
+              </v-col>
+              <v-col>
+                <v-card-title class="pa-0 font-weight-light">
+                  Available Balance
+                </v-card-title>
+              </v-col>
+              <v-col>
+                <v-card-title class="pa-0 font-weight-light">
+                  Present Balance
+                </v-card-title>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-card-subtitle class="pa-0 font-weight-bold primary--text text--lighten-1">
+                  Checking
+                </v-card-subtitle>
+              </v-col>
+              <v-col>
+                <v-card-subtitle class="pa-0">
+                  <v-icon left color="primary lighten-2">mdi-currency-usd</v-icon>5,200.23
+                </v-card-subtitle>
+              </v-col>
+              <v-col>
+                <v-card-subtitle class="pa-0">
+                  <v-icon left color="primary lighten-2">mdi-currency-usd</v-icon>5,200.23
+                </v-card-subtitle>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-card-subtitle class="pa-0 font-weight-bold primary--text text--lighten-1">
+                  Savings
+                </v-card-subtitle>
+              </v-col>
+              <v-col>
+                <v-card-subtitle class="pa-0">
+                  <v-icon left color="primary lighten-2">mdi-currency-usd</v-icon>70,213.65
+                </v-card-subtitle>
+              </v-col>
+              <v-col>
+                <v-card-subtitle class="pa-0">
+                  <v-icon left color="primary lighten-2">mdi-currency-usd</v-icon>70,213.65
+                </v-card-subtitle>
+              </v-col>
+            </v-row>
+          </v-card-text>
         </v-card>
       </v-container>
       <v-container
         style="display: flex; justify-content: space-around; align-items: center; height:50%"
       >
-        <log-window ref="logWindow" />
-        <code-snippet :email="email" :password="password" />
+        <v-slide-y-transition
+          group
+          style="display: flex; justify-content: space-around; align-items: center; width: 100%"
+        >
+          <log-window key="logs" ref="logWindow" />
+          <code-snippet
+            key="code"
+            :email="email"
+            :password="password"
+            v-if="currentGuideItem >= 2"
+          />
+        </v-slide-y-transition>
       </v-container>
     </v-main>
   </v-app>
@@ -97,7 +161,7 @@ export default {
       password: '',
       loading: false,
 
-      currentGuideItem: 0,
+      currentGuideItem: 6,
       guide: [
         {
           title: 'Einführung',
@@ -109,7 +173,7 @@ export default {
               Password: <span class="primary--text text--lighten-2 font-weight-bold">securePassword</span>
             </div>
             <div class="pt-1">
-              Und schauen sie in die <strong>Logs</strong>
+              Und schauen sie in die <strong class="primary--text text--lighten-1">Logs</strong>
             </div>
           </span>`,
           function: async () => {
@@ -131,7 +195,7 @@ export default {
               Password: <span class="primary--text text--lighten-2 font-weight-bold">securePassword'</span>
             </div>
             <div class="pt-1">
-              Und schauen sie in die <strong>Logs</strong>
+              Und schauen sie in die <strong class="primary--text text--lighten-1">Logs</strong>
             </div>
           </span>`,
           function: async () => {
@@ -141,14 +205,38 @@ export default {
               'error',
               3000
             );
+            this.currentGuideItem++;
           },
         },
         {
           title: 'Der Server ist gecrasht',
           instructions: `
           <div>Was könnte das bedeuten?</div>
-          <div>Die <strong>Logs</strong> zeigen, dass der <strong>'</strong> charakter etwas durcheinander gebracht hat...</div>`,
+          <div class="pt-2">Die <strong class="primary--text text--lighten-1">Logs</strong> zeigen, dass der <strong>'</strong> charakter etwas durcheinander gebracht hat...</div>
+          <div class="pt-1">Im <strong class="primary--text text--lighten-1">Code Snippet</strong> Fenster können Sie beobachten, was sich im Code getan hat</div>`,
           function: async () => {},
+        },
+        {
+          title: 'SQL Injection anwenden',
+          instructions: `
+          <span>Jetzt versuchen wir die schwachstelle mit diesen Eingaben auszunutzen: <div><strong class="primary--text text--lighten-2">' or 1=1--</strong></div> 
+            <div class="pt-1">
+              E-Mail: <span class="primary--text text--lighten-2 font-weight-bold">test@email.com</span>
+              <br/>
+              Password: <span class="primary--text text--lighten-2 font-weight-bold"><strong class="primary--text text--lighten-2">' or 1=1--</strong></span>
+            </div>
+            <div class="pt-1">
+              Und schauen sie in die <strong class="primary--text text--lighten-1">Logs</strong> und <strong class="primary--text text--lighten-1">Code Snippet</strong>
+            </div>
+          </span>`,
+          function: async () => {
+            await this.$refs.logWindow.addLine('Logging in...', 'info', 100);
+            await this.$refs.logWindow.addLine(
+              `Successfully logged in as <strong>test</strong>!`,
+              'success',
+              3000
+            );
+          },
         },
       ],
     };
@@ -156,7 +244,7 @@ export default {
 
   methods: {
     attemptLogin: async function(e) {
-      if (!this.loading) {
+      if (!this.loading && !this.atEnd) {
         this.loading = true;
         console.log(e);
         await this.guide[this.currentGuideItem].function();
@@ -166,15 +254,20 @@ export default {
     },
   },
 
+  computed: {
+    atEnd() {
+      return this.currentGuideItem >= this.guide.length;
+    },
+  },
+
   mounted: async function() {
     await this.$refs.logWindow.addLine('[Starting Server...]', 'info', 300);
     await this.$refs.logWindow.addLine('[Server Started]', 'info', 300);
-    /*await this.$refs.logWindow.addLine(
-      '[Cant continue... There is an unexpected sussy baka on line: 234]',
-      'error',
-      2000
-    );*/
-    await this.$refs.logWindow.addLine('', 'transparent', 0);
+    await this.$refs.logWindow.addLine(
+      '<hr class="v-divider theme--dark info darken-1">',
+      '',
+      0
+    );
   },
 };
 </script>
