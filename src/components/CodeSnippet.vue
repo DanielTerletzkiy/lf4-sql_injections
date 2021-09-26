@@ -1,5 +1,5 @@
 <template>
-  <v-card color="#242731" width="400" flat height="240">
+  <v-card color="#242731" width="500" flat height="240">
     <v-card-subtitle class="pa-2">
       Code Snippet
     </v-card-subtitle>

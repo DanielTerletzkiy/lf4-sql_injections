@@ -254,7 +254,7 @@ export default {
             await this.$refs.logWindow.addLine(
               'Strange... login infos don´t match',
               'warning',
-              3000
+              1000
             );
           },
         },
@@ -276,7 +276,7 @@ export default {
             await this.$refs.logWindow.addLine(
               `An error occurred: PG::SyntaxError: ERROR: unterminated quoted string at or near "'securePassword'' limit 1" LINE 1: ...ers where email = 'user@email.com' and pass = 'securePassword'... ^ : select * from users where email = 'user@email.com' and pass = 'securePassword'' limit 1.Unable to login this user due to unexpected error.`,
               'error',
-              3000
+              1000
             );
             this.currentGuideItem++;
           },
@@ -305,9 +305,9 @@ export default {
           function: async () => {
             await this.$refs.logWindow.addLine('Logging in...', 'info', 100);
             await this.$refs.logWindow.addLine(
-              `Successfully logged in as <strong>test</strong>!`,
+              `Successfully logged in as <a class="primary--text text--lighten-1"><strong>Daniel Terletzkiy</strong></a>!`,
               'success',
-              3000
+              1000
             );
           },
         },
@@ -344,7 +344,7 @@ export default {
       await this.$refs.logWindow.addLine(
         'All Bitcoin transferred!',
         'success',
-        3000
+        1000
       );
       this.loading = false;
       this.bitcoin = 0;

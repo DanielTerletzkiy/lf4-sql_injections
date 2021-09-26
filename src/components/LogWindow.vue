@@ -1,5 +1,5 @@
 <template>
-  <v-card color="#242731" width="400" flat height="240">
+  <v-card color="#242731" width="500" flat height="240">
     <v-card-subtitle class="pa-2">
       Logs
     </v-card-subtitle>
@@ -9,6 +9,7 @@
         style="min-height: 100%; max-height: 100%; overflow: auto; font-family: monospace;"
       >
         <v-card-text v-html="logHtml"></v-card-text>
+        <div ref="logEnd" class="pt-1"/>
       </div>
     </div>
   </v-card>
@@ -26,8 +27,8 @@ export default {
 
   methods: {
     addLine(text, color, time) {
-      return new Promise((resolve)=> {
-        setTimeout(()=> {
+      return new Promise((resolve) => {
+        setTimeout(() => {
           resolve(this.renderLine(text, color));
         }, time);
       });
@@ -39,6 +40,18 @@ export default {
   },
 
   computed: {},
+
+  watch: {
+    logHtml() {
+      setTimeout(() => {
+        const el = this.$refs.logEnd;
+        console.log(el);
+        el.scrollIntoView({
+          behavior: 'smooth',
+        });
+      }, 10);
+    },
+  },
 
   mounted: async function() {},
 };
