@@ -79,7 +79,7 @@
               </v-card-actions>
             </v-form>
           </v-card-text>
-          <v-card-text v-else class="pt-0">
+          <v-card-text v-else>
             <v-row>
               <v-col>
                 <v-card-title class="pa-0 primary--text text--lighten-2">
