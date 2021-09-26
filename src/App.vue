@@ -8,14 +8,40 @@
         style="display: flex; justify-content: center; align-items: center; height:50%"
       >
         <v-card rounded="lg" flat style="background: #242731" width="600">
-          <v-card-text class="pb-0">
-            <v-card-title>
-              <v-icon left large color="accent">mdi-bank</v-icon>Big Corpo Bank
-            </v-card-title>
-            <v-card-subtitle>
-              Trust <strong>us</strong> with <u>your</u> money
-              <v-icon style="color: inherit">mdi-currency-usd</v-icon> ;)
-            </v-card-subtitle>
+          <v-card-text
+            class="pb-0 d-flex"
+            style="justify-content: space-between"
+          >
+            <div>
+              <v-card-title>
+                <v-icon left large color="accent">mdi-bank</v-icon>Big Corpo
+                Bank
+              </v-card-title>
+              <v-card-subtitle>
+                Trust <strong>us</strong> with <u>your</u> money
+                <v-icon style="color: inherit">mdi-currency-usd</v-icon> ;)
+              </v-card-subtitle>
+            </div>
+            <v-list-item style="max-width: 220px;" v-if="atEnd">
+              <v-list-item-avatar>
+                <v-img
+                  src="https://avatars.dicebear.com/api/initials/Daniel%20Terletzkiy.svg"
+                />
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-subtitle>
+                  Welcome back,
+                </v-list-item-subtitle>
+                <v-list-item-title>
+                  <v-btn
+                    @click="openGithub"
+                    text
+                    style="text-transform: none; padding: 0; font-weight: unset !important; letter-spacing: unset !important; height: 24px; font-size: 18px"
+                    >Daniel Terletzkiy</v-btn
+                  >
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </v-card-text>
           <v-card-text v-if="!atEnd">
             <v-form @submit.prevent="attemptLogin" id="login-form">
@@ -54,26 +80,6 @@
             </v-form>
           </v-card-text>
           <v-card-text v-else class="pt-0">
-            <v-list-item>
-              <v-list-item-avatar>
-                <v-img
-                  src="https://avatars.dicebear.com/api/initials/Daniel%20Terletzkiy.svg"
-                />
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-subtitle>
-                  Welcome back,
-                </v-list-item-subtitle>
-                <v-list-item-title>
-                  <v-btn
-                    @click="openGithub"
-                    text
-                    style="text-transform: none; padding: 0; font-weight: unset !important; letter-spacing: unset !important; height: 24px; font-size: 18px"
-                    >Daniel Terletzkiy</v-btn
-                  >
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
             <v-row>
               <v-col>
                 <v-card-title class="pa-0 primary--text text--lighten-2">
@@ -146,14 +152,18 @@
                 </v-card-subtitle>
               </v-col>
               <v-col>
-                <v-card-subtitle class="pa-0" :class="`${bitcoin===0?'text--lighten-1 error':''}--text`">
+                <v-card-subtitle
+                  class="pa-0"
+                  :class="
+                    `${bitcoin === 0 ? 'text--lighten-1 error' : ''}--text`
+                  "
+                >
                   <v-icon left color="primary lighten-2"
                     >mdi-currency-btc</v-icon
-                  >{{bitcoin}}
+                  >{{ bitcoin }}
                 </v-card-subtitle>
               </v-col>
-              <v-col>
-              </v-col>
+              <v-col> </v-col>
             </v-row>
 
             <v-card-text>
@@ -178,7 +188,7 @@
                   depressed
                   text
                   :loading="loading"
-                  :disabled="loading||bitcoin===0"
+                  :disabled="loading || bitcoin === 0"
                   @click="sendBitcoin"
                 >
                   <v-icon large color="#f7931a">mdi-bitcoin</v-icon>
@@ -301,6 +311,12 @@ export default {
             );
           },
         },
+        {
+          title: 'Fertig!',
+          instructions: `
+          <span>Und so einfach war es, die schwachstelle auszunutzen.<br/>Jetzt haben sie die Kontrolle über dieses 'Konto'</span>`,
+          function: async () => {},
+        },
       ],
     };
   },
@@ -320,8 +336,16 @@ export default {
     },
     sendBitcoin: async function() {
       this.loading = true;
-      await this.$refs.logWindow.addLine('Transferring Bitcoin...', 'info', 300);
-      await this.$refs.logWindow.addLine('All Bitcoin transferred!', 'success', 3000);
+      await this.$refs.logWindow.addLine(
+        'Transferring Bitcoin...',
+        'info',
+        300
+      );
+      await this.$refs.logWindow.addLine(
+        'All Bitcoin transferred!',
+        'success',
+        3000
+      );
       this.loading = false;
       this.bitcoin = 0;
     },
@@ -329,7 +353,7 @@ export default {
 
   computed: {
     atEnd() {
-      return this.currentGuideItem >= this.guide.length;
+      return this.currentGuideItem >= this.guide.length - 1;
     },
   },
 
@@ -349,9 +373,30 @@ export default {
 html {
   overflow-y: hidden !important;
 }
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.086);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(82, 82, 87, 0.4);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(154, 154, 163, 0.35);
+}
+
 .theme--dark.v-navigation-drawer:not(.v-navigation-drawer--floating)
-  .v-navigation-drawer__border {
-  background-color: transparent !important;
+  .v-navigation-drawer__border,
+.theme--dark.v-navigation-drawer {
+  background-color: #242731 !important;
 }
 .theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled),
 .theme--dark.v-btn {
