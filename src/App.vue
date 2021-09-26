@@ -8,7 +8,7 @@
         style="display: flex; justify-content: center; align-items: center; height:50%"
       >
         <v-card rounded="lg" flat style="background: #242731" width="600">
-          <v-card-text>
+          <v-card-text class="pb-0">
             <v-card-title>
               <v-icon left large color="accent">mdi-bank</v-icon>Big Corpo Bank
             </v-card-title>
@@ -37,24 +37,6 @@
                 :hint="password"
               />
               <v-card-actions style="display: flex">
-                <v-hover v-slot="{ hover }" v-if="false">
-                  <v-btn
-                    rounded
-                    depressed
-                    :x-large="hover"
-                    :fab="!hover"
-                    :style="`height: 52px; width: ${hover ? 'auto' : '52px'};`"
-                    :ripple="false"
-                    class="secondary darken-1"
-                  >
-                    <v-icon color="grey">mdi-wallet-plus-outline</v-icon
-                    ><v-fade-transition hide-on-leave
-                      ><span class="grey--text" v-if="hover"
-                        >Register</span
-                      ></v-fade-transition
-                    >
-                  </v-btn>
-                </v-hover>
                 <v-btn
                   style="flex: 1"
                   rounded
@@ -64,14 +46,34 @@
                   type="submit"
                   form="login-form"
                   :loading="loading"
+                  :disabled="loading"
                 >
                   <v-icon>mdi-wallet-outline</v-icon>Sign In
                 </v-btn>
               </v-card-actions>
             </v-form>
           </v-card-text>
-          <v-card-text v-else>
-            //addProfile
+          <v-card-text v-else class="pt-0">
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-img
+                  src="https://avatars.dicebear.com/api/initials/Daniel%20Terletzkiy.svg"
+                />
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-subtitle>
+                  Welcome back,
+                </v-list-item-subtitle>
+                <v-list-item-title>
+                  <v-btn
+                    @click="openGithub"
+                    text
+                    style="text-transform: none; padding: 0; font-weight: unset !important; letter-spacing: unset !important; height: 24px; font-size: 18px"
+                    >Daniel Terletzkiy</v-btn
+                  >
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
             <v-row>
               <v-col>
                 <v-card-title class="pa-0 primary--text text--lighten-2">
@@ -85,44 +87,104 @@
               </v-col>
               <v-col>
                 <v-card-title class="pa-0 font-weight-light">
-                  Present Balance
+                  Current Balance
                 </v-card-title>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
-                <v-card-subtitle class="pa-0 font-weight-bold primary--text text--lighten-1">
+                <v-card-subtitle
+                  class="pa-0 font-weight-bold primary--text text--lighten-1"
+                >
                   Checking
                 </v-card-subtitle>
               </v-col>
               <v-col>
                 <v-card-subtitle class="pa-0">
-                  <v-icon left color="primary lighten-2">mdi-currency-usd</v-icon>5,200.23
+                  <v-icon left color="primary lighten-2"
+                    >mdi-currency-usd</v-icon
+                  >4,120.86
                 </v-card-subtitle>
               </v-col>
               <v-col>
                 <v-card-subtitle class="pa-0">
-                  <v-icon left color="primary lighten-2">mdi-currency-usd</v-icon>5,200.23
+                  <v-icon left color="primary lighten-2"
+                    >mdi-currency-usd</v-icon
+                  >5,200.23
                 </v-card-subtitle>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
-                <v-card-subtitle class="pa-0 font-weight-bold primary--text text--lighten-1">
+                <v-card-subtitle
+                  class="pa-0 font-weight-bold primary--text text--lighten-1"
+                >
                   Savings
                 </v-card-subtitle>
               </v-col>
               <v-col>
                 <v-card-subtitle class="pa-0">
-                  <v-icon left color="primary lighten-2">mdi-currency-usd</v-icon>70,213.65
+                  <v-icon left color="primary lighten-2"
+                    >mdi-currency-usd</v-icon
+                  >70,213.65
                 </v-card-subtitle>
               </v-col>
               <v-col>
                 <v-card-subtitle class="pa-0">
-                  <v-icon left color="primary lighten-2">mdi-currency-usd</v-icon>70,213.65
+                  <v-icon left color="primary lighten-2"
+                    >mdi-currency-usd</v-icon
+                  >70,213.65
                 </v-card-subtitle>
               </v-col>
             </v-row>
+            <v-row>
+              <v-col>
+                <v-card-subtitle
+                  class="pa-0 font-weight-bold primary--text text--lighten-1"
+                >
+                  Bitcoin
+                </v-card-subtitle>
+              </v-col>
+              <v-col>
+                <v-card-subtitle class="pa-0" :class="`${bitcoin===0?'text--lighten-1 error':''}--text`">
+                  <v-icon left color="primary lighten-2"
+                    >mdi-currency-btc</v-icon
+                  >{{bitcoin}}
+                </v-card-subtitle>
+              </v-col>
+              <v-col>
+              </v-col>
+            </v-row>
+
+            <v-card-text>
+              <div style="display: flex; align-items: center;">
+                <v-divider class="mr-2" style="max-width: 20px"></v-divider>
+                <v-card-subtitle class="pa-1">Bitcoin Transfer</v-card-subtitle>
+                <v-divider class="ml-2"></v-divider>
+              </div>
+              <div style="display: flex;">
+                <v-text-field
+                  outlined
+                  hint="Wallet-ID Autofilled"
+                  persistent-hint
+                  color="#f7931a"
+                  label="Wallet-ID"
+                  value="54bd57b7-67af-6db7-ef17-a8c4bef5d3bd"
+                />
+                <v-btn
+                  color="#f7931a"
+                  height="56"
+                  width="56"
+                  depressed
+                  text
+                  :loading="loading"
+                  :disabled="loading||bitcoin===0"
+                  @click="sendBitcoin"
+                >
+                  <v-icon large color="#f7931a">mdi-bitcoin</v-icon>
+                </v-btn>
+              </div>
+            </v-card-text>
           </v-card-text>
         </v-card>
       </v-container>
@@ -159,6 +221,7 @@ export default {
     return {
       email: '',
       password: '',
+      bitcoin: 20.3890234,
       loading: false,
 
       currentGuideItem: 0,
@@ -252,6 +315,16 @@ export default {
         this.loading = false;
       }
     },
+    openGithub() {
+      window.open('https://github.com/DanielTerletzkiy', '_blank');
+    },
+    sendBitcoin: async function() {
+      this.loading = true;
+      await this.$refs.logWindow.addLine('Transferring Bitcoin...', 'info', 300);
+      await this.$refs.logWindow.addLine('All Bitcoin transferred!', 'success', 3000);
+      this.loading = false;
+      this.bitcoin = 0;
+    },
   },
 
   computed: {
@@ -279,5 +352,9 @@ html {
 .theme--dark.v-navigation-drawer:not(.v-navigation-drawer--floating)
   .v-navigation-drawer__border {
   background-color: transparent !important;
+}
+.theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled),
+.theme--dark.v-btn {
+  color: hsla(0, 0%, 100%, 0.7) !important;
 }
 </style>
