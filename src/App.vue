@@ -7,7 +7,7 @@
       <v-container
         style="display: flex; justify-content: center; align-items: center; height:50%"
       >
-        <v-card rounded="lg" flat width="600">
+        <v-card rounded="lg" elevation="1" width="600">
           <v-card-text
             class="pb-0 d-flex"
             style="justify-content: space-between"
