@@ -1,5 +1,5 @@
 <template>
-  <v-app style="background: #1F2128">
+  <v-app>
     <v-navigation-drawer app permanent width="360">
       <tutorial-card :guide="guide" :currentGuideItem="currentGuideItem" />
     </v-navigation-drawer>
@@ -7,7 +7,7 @@
       <v-container
         style="display: flex; justify-content: center; align-items: center; height:50%"
       >
-        <v-card rounded="lg" flat style="background: #242731" width="600">
+        <v-card rounded="lg" flat width="600">
           <v-card-text
             class="pb-0 d-flex"
             style="justify-content: space-between"
@@ -385,12 +385,10 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(82, 82, 87, 0.4);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(154, 154, 163, 0.35);
 }
 
 .theme--dark.v-navigation-drawer:not(.v-navigation-drawer--floating)
