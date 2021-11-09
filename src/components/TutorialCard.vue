@@ -1,5 +1,5 @@
 <template>
-  <v-card color="#242731" width="600" flat height="100%">
+  <v-card width="600" flat height="100%">
     <v-card-text class="pa-0">
       <v-card-title class="pa-2">
         Guide
